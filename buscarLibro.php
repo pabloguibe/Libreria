@@ -1,5 +1,4 @@
 <?php
-// Crear conexión
 $con = mysqli_connect('localhost', 'root', '', 'libros_bd');
 ?>
 
@@ -12,37 +11,39 @@ $con = mysqli_connect('localhost', 'root', '', 'libros_bd');
     <title>Buscar Libro</title>
 </head>
 <body>
-
-<?php
-$buscar = $_POST["libro"];
-?>
-
-<form method="post" action="buscarLibro.php">
-    <label for="libro">Buscar:</label>
-    <input type="text" id="libro" name="libro">
-    <button type="submit">Buscar</button>
+<form method="post">
+  <label for="titulo_libro">Titulo del libro a buscar:</label>
+  <input type="text" name="titulo_libro" id="titulo_libro">
+  <button type="submit">Buscar Libro</button>
 </form>
 
 <?php
-
-
-$sql = "SELECT * FROM catalogo_libros WHERE titulo LIKE ?";
-$stmt = mysqli_prepare($conn, $sql);
-$buscar_param = "%" . $buscar . "%";
-mysqli_stmt_bind_param($stmt, "s", $buscar_param);
-mysqli_stmt_execute($stmt);
-$resultado = mysqli_stmt_get_result($stmt);
-
-if (mysqli_num_rows($resultado) > 0) {
-    // Salida de datos de cada fila
-    while($fila = mysqli_fetch_assoc($resultado)) {
-        echo "ID: " . $fila["id"]. " titulo : " . $fila["titulo"]. "<br>";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $conexion = mysqli_connect('localhost', 'root', '', 'libros_bd');
+  if (mysqli_connect_errno()) {
+    echo 'Error de conexión a la base de datos: ' . mysqli_connect_error();
+    exit;
+  }
+  $titulo_libro = mysqli_real_escape_string($conexion, $_POST['titulo_libro']);
+  $consulta = "SELECT * FROM catalogo_libros WHERE titulo = '$titulo_libro'";
+  $resultado = mysqli_query($conexion, $consulta);
+  if (mysqli_num_rows($resultado) > 0) {
+    while ($row = $resultado->fetch_assoc()) {
+        echo "ID: " . $row["id"] . "<br>";
+        echo "titulo: " . $row["titulo"] . "<br>";
+        echo "autor: " . $row["autor"] . "<br>";
+        echo "editorial: " . $row["editorial"] . "<br>";
+        echo "genero: " . $row["genero"] . "<br>";
+        echo "fecha_publicacion: " . $row["fecha_publicacion"] . "<br>";
+        echo "precio: " . $row["precio"] . "<br>";
+        echo "<br>";
     }
-} else {
-    echo "0 resultados";
+  } else {
+    echo 'El libro no se encuentra en la base de datos.';
+  }
+  mysqli_close($conexion);
 }
-mysqli_close($conn);
 ?>
-
+<a href="index.php"><button>MENÚ PRINCIPAL</button></a>
 </body>
 </html>

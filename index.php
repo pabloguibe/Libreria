@@ -14,7 +14,8 @@
 			<li><a href="eliminarlibro.php">Eliminar libros</a></li>
 			<li><a href="añadirLibro.php">Añadir libros</a></li>
 			<li><a href="buscarLibro.php">Buscar Libro</a></li>
-			<li><a href="#">Contacto</a></li>
+			<li><a href="carrito.php">Carrito</a></li>
+			
 		</ul>
 	</nav>
 	<!-- contenido de la página aquí -->
